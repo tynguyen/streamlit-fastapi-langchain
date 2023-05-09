@@ -35,11 +35,16 @@ def testFindingCandidates(question: str = None):
         verbose=True,
     )
     if question is None:
-        question = "Find an engineer in Vietnam skilled in python and java"
+        question = "find an engineer in vietnam that is good at python"
     response = mrkl.run(question)
     print(f"===========================")
     print(f"{response}")
 
 
 if __name__ == "__main__":
-    testFindingCandidates()
+    # question = "find an engineer in vietnam that is good at python"
+    # testFindingCandidates(question)
+    question = (
+        "find an engineer in vietnam that is good at python and has worked for grab"
+    )
+    testFindingCandidates(question)

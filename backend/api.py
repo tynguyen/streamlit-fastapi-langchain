@@ -36,14 +36,21 @@ def ask(question: Question) -> Dict[str, str]:
         agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
     )
-    backup = sys.stdout
-    try:
-        sys.stdout = StringIO()
-        answer = agent.run(question)
-        # answer = sys.stdout.getvalue()
-    finally:
-        sys.stdout.close()
-        sys.stdout = backup
+    # backup = sys.stdout
+    # try:
+    #     sys.stdout = StringIO()
+    #     answer = agent.run(question)
+    #     # answer = sys.stdout.getvalue()
+    # finally:
+    #     sys.stdout.close()
+    #     sys.stdout = backup
+    import pdb
+
+    pdb.set_trace()
+    answer = agent.run(question)
+    # if type(answer) == str:
+    # return {"result": answer}
+    # elif type(answer) == JSON:
     return {"result": answer}
 
 
@@ -53,4 +60,4 @@ def home():
 
 
 if __name__ == "__main__":
-    uvicorn.run("api:app", host="0.0.0.0", port=int(os.environ["PORT"]))
+    uvicorn.run("api:app", host="0.0.0.0", port=int(os.environ["BACKEND_PORT"]))

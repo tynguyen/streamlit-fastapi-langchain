@@ -56,9 +56,13 @@ class ParsingMultiplierTool(BaseTool):
 
 
 class PDLHandlerInput(PydanticBaseModel):
-    skills: Optional[str]
-    location_country: Optional[str]
-    companies: Optional[str]
+    skills: Optional[str] = Field(description="Skills that a candidate has")
+    location_country: Optional[str] = Field(
+        description="current location country of the candidate"
+    )
+    companies: Optional[str] = Field(
+        description="Name of companies that a candidate has worked at"
+    )
 
 
 def parseStringToList(string):
@@ -93,15 +97,21 @@ def execPDLQuery(**kwargs):
     print(f"========================\n Keys and values input to the TOOL:")
     for key, str_of_values in kwargs.items():
         print(f"{key}: {str_of_values}")
-        if str_of_values is not None:
+        if str_of_values is not None and len(str_of_values) > 0:
             values = parseStringToList(str_of_values)
             clauses = [{"match": {key: val}} for val in values]
             # TODO: separate must and should
             must_clauses.extend(clauses)
     # TODO: handle different searches to make sure thare are always responses
     query = PDLHandler.buildQuery(must_clauses, should_clauses)
+    print(f"QUERY: {query}")
+    import pdb
+
+    pdb.set_trace()
     success, response = PDLHandler.sendQuery(query, 1)
-    return response
+
+    pdb.set_trace()
+    return PDLHandler.convertResponseToStringOfProfiles(response)
 
 
 class PDLHandlerTool(BaseTool):
@@ -128,7 +138,7 @@ class PDLHandlerTool(BaseTool):
         kwargs = {
             "skills": skills,
             "location_country": location_country,
-            "companies": companies,
+            "experience.company.name": companies,
         }
         return execPDLQuery(**kwargs)
 

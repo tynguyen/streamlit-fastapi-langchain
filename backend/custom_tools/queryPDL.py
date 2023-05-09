@@ -5,6 +5,8 @@ import pdb
 from typing import Dict, List
 import plotly.express as px
 import plotly.graph_objects as go
+from collections import OrderedDict
+import json
 
 load_dotenv()
 
@@ -32,6 +34,7 @@ class PDLHandler:
                     {"term": {"location_country": "vietnam"}},
                     {"term": {"job_company_location_country": "vietnam"}},
                     {"match": {"skills": "javascript"}},
+                    {"match": {"experience.company.name": "grab"}},
                 ],
                 "should": [
                     {"exists": {"field": "phone_numbers"}},
@@ -165,7 +168,9 @@ class PDLHandler:
         experience_companies = []
         for exp in profile["experience"]:
             company = exp["company"]["name"]
-            experience_companies.append(exp)
+            experience_companies.append(company)
+        print_field_names.append("experience")
+        print_field_values.append(experience_companies)
 
         for clause in must_clauses:
             criteria = clause.keys()[0]
@@ -194,9 +199,24 @@ class PDLHandler:
         # TODO: remove
         for i in range(len(print_field_names)):
             print(f"{print_field_names[i]}: {print_field_values[i]}")
-        return print_field_names, print_field_values
+        return OrderedDict(zip(print_field_names, print_field_values))
+
+    @classmethod
+    def convertResponseToStringOfProfiles(
+        cls, response, must_clauses: List = None, should_clauses: List = None
+    ):
+        data = response["data"]
+        total = response["total"]
+        final_data = {"total": total}
+        profiles = []
+        for record in data:
+            profile_dict = PDLHandler.extractProfileBasedOnClauses(record)
+            profiles.append(profile_dict)
+        final_data["data"] = profiles
+        final_data = json.dumps(final_data)
+        return final_data
 
 
 if __name__ == "__main__":
     PDLHandler.sendQuery(PDLHandler.ES_QUERY, 1)
-    PDLHandler.analyze_criteria(PDLHandler.ES_QUERY)
+    # PDLHandler.analyze_criteria(PDLHandler.ES_QUERY)

@@ -9,9 +9,9 @@ RUN pip install -r requirements.txt
 RUN mkdir -p /app/backend
 COPY . /app/backend
 
-EXPOSE 8080
+EXPOSE "$BACKEND_HOST"
 
 RUN useradd -m myuser
 USER myuser
 
-CMD ["uvicorn", "--app-dir", "./backend" ,"api:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "--app-dir", "./backend" ,"api:app", "--host", "0.0.0.0", "--port", "$BACKEND_HOST"]
