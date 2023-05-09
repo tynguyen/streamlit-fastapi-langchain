@@ -36,21 +36,18 @@ def ask(question: Question) -> Dict[str, str]:
         agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
         verbose=True,
     )
+
+    # The following used to turn off the console printing
     # backup = sys.stdout
     # try:
     #     sys.stdout = StringIO()
     #     answer = agent.run(question)
     #     # answer = sys.stdout.getvalue()
+    #     return {"result": answer}
     # finally:
     #     sys.stdout.close()
     #     sys.stdout = backup
-    import pdb
-
-    pdb.set_trace()
     answer = agent.run(question)
-    # if type(answer) == str:
-    # return {"result": answer}
-    # elif type(answer) == JSON:
     return {"result": answer}
 
 

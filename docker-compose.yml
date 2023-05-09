@@ -4,12 +4,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app/frontend
     ports:
-      - ${PORT}:${PORT}
+      - ${FORNTEND_PORT}:${FRONTEND_PORT}
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - PORT=${PORT}
+      - PORT=${FRONTEND_PORT}
     networks:
       - deploy_network
     depends_on:
@@ -20,11 +20,12 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     volumes:
-      - ./backend:/app
+      - ./backend:/app/backend
     ports:
-      - 8080:8080
+      - ${BACKEND_PORT}:${BACKEND_PORT}
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PORT=${BACKEND_PORT}
     networks:
       - deploy_network
 

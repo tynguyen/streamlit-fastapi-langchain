@@ -12,4 +12,4 @@ COPY . /app/frontend/
 RUN useradd -m myuser
 USER myuser
 
-CMD ["sh", "-c", "streamlit run --server.port $PORT /app/frontend/streamlit_app.py"]
+CMD ["sh", "-c", "streamlit run --server.port $FRONTEND_PORT /app/frontend/streamlit_app.py"]
