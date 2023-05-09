@@ -4,8 +4,12 @@ Repository created as minimal reproducaible example for [this Stackoverflow ques
 
 It is a multi-Docker application with a Streamlit frontend and a FastAPI backend [deployed on Heroku](https://morning-everglades-39854.herokuapp.com/).
 
-References:\
-[1] https://testdriven.io/blog/fastapi-streamlit/
+## Roadmap
+
+```
+[] [Use human input as a tool](https://python.langchain.com/en/latest/modules/agents/tools/examples/human_tools.html)
+
+```
 
 ## Set up
 
@@ -40,7 +44,7 @@ docker compose --env-file .env up -d --build
 
 ### Go to `https:localhost:8501`
 
-Example:\
+Example:
 ![Example](public/screen.png)
 
 ### (Optional) Run backend docker
@@ -48,4 +52,15 @@ Example:\
 ```
 docker run -p 8080:8080 streamlit-fastapi-langchain-backend
 
+```
+
+## References:
+
+```
+[0] https://testdriven.io/blog/fastapi-streamlit/
+[1] [Tutorial](https://colab.research.google.com/drive/1pg5-lE0ns0ehc3TDANUd-Rr_FRkTgPZO?usp=sharing#scrollTo=YIZV3dpeS7oP)
+[2] [Search Person API Parameters](https://docs.peopledatalabs.com/docs/input-parameters-person-search-api#size)
+[3] [API Key (private)](https://dashboard.peopledatalabs.com/api-keys)
+[4] [Person Schema](https://docs.peopledatalabs.com/docs/fields)
+[5] [Use human input as a tool](https://python.langchain.com/en/latest/modules/agents/tools/examples/human_tools.html)
 ```

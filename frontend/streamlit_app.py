@@ -6,7 +6,9 @@ import requests  # type: ignore
 import streamlit as st
 from ansi2html import Ansi2HTMLConverter
 
-question = st.text_input("Type your math question:", placeholder="What 19 to the power 0.43?")
+question = st.text_input(
+    "Type your math question:", placeholder="What 19 to the power 0.43?"
+)
 
 submit = st.button("Submit")
 

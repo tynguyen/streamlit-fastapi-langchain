@@ -1,4 +1,10 @@
 from __future__ import annotations
+import os
+
+os.environ["LANGCHAIN_TRACING"] = "true"
+os.environ["LANGCHAIN_SESSION"] = "streamlit-langchain-backend"
+os.environ["LANGCHAIN_HANDLER"] = "langchain"
+
 
 import sys
 from io import StringIO
