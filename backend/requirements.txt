@@ -3,3 +3,7 @@ langchain
 openai
 python-dotenv
 uvicorn
+peopledatalabs
+pydantic==1.9.2
+plotly
+folium
