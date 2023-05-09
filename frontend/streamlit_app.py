@@ -20,7 +20,7 @@ def main():
             return
 
         with st.spinner(text="Running agent..."):
-            host = "http://api:8080/ask"
+            host = "http://localhost:8080/ask"
             header = {"Content-Type": "application/json"}
             payload = json.dumps({"question": question})
             response = requests.request("POST", host, headers=header, data=payload)

@@ -6,9 +6,10 @@ COPY requirements.txt ./requirements.txt
 
 RUN pip install -r requirements.txt
 
-COPY . /app
+RUN mkdir -p /app/frontend
+COPY . /app/frontend/
 
 RUN useradd -m myuser
 USER myuser
 
-CMD ["sh", "-c", "streamlit run --server.port $PORT /app/streamlit_app.py"]
+CMD ["sh", "-c", "streamlit run --server.port $PORT /app/frontend/streamlit_app.py"]

@@ -1,11 +1,5 @@
 from __future__ import annotations
 import os
-
-os.environ["LANGCHAIN_TRACING"] = "true"
-os.environ["LANGCHAIN_SESSION"] = "streamlit-langchain-backend"
-os.environ["LANGCHAIN_HANDLER"] = "langchain"
-
-
 import sys
 from io import StringIO
 
@@ -16,6 +10,8 @@ from langchain.agents import initialize_agent
 from langchain.agents import load_tools
 from langchain.llms import OpenAI
 from pydantic import BaseModel
+from backend.custom_tools.queryPDL_tool import PDLHandlerTool
+from typing import Dict
 import uvicorn
 import os
 
@@ -30,17 +26,21 @@ app = FastAPI()
 
 
 @app.post("/ask")
-def ask(question: Question) -> dict[str, str]:
+def ask(question: Question) -> Dict[str, str]:
     llm = OpenAI(temperature=0)
-    tools = load_tools(["llm-math"], llm=llm)
+    tools = [PDLHandlerTool()]
+
     agent = initialize_agent(
-        tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True
+        tools,
+        llm,
+        agent=AgentType.STRUCTURED_CHAT_ZERO_SHOT_REACT_DESCRIPTION,
+        verbose=True,
     )
     backup = sys.stdout
     try:
         sys.stdout = StringIO()
-        agent.run(question)
-        answer = sys.stdout.getvalue()
+        answer = agent.run(question)
+        # answer = sys.stdout.getvalue()
     finally:
         sys.stdout.close()
         sys.stdout = backup

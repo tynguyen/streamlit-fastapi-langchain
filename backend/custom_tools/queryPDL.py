@@ -70,7 +70,7 @@ class PDLHandler:
             return False, ""
 
     @classmethod
-    def _buildQuery(must_clauses: List[str], should_clauses: List[str]):
+    def buildQuery(cls, must_clauses: List[str], should_clauses: List[str]):
         query = {"query": {"bool": {"must": must_clauses, "should": should_clauses}}}
         return query
 
