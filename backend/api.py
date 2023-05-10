@@ -9,6 +9,7 @@ from langchain.agents import AgentType
 from langchain.agents import initialize_agent
 from langchain.agents import load_tools
 from langchain.llms import OpenAI
+from langchain.chat_models import ChatOpenAI
 from pydantic import BaseModel
 from backend.custom_tools.queryPDL_tool import PDLHandlerTool
 from typing import Dict
@@ -27,7 +28,8 @@ app = FastAPI()
 
 @app.post("/ask")
 def ask(question: Question) -> Dict[str, str]:
-    llm = OpenAI(temperature=0)
+    # llm = OpenAI(temperature=0)
+    llm = ChatOpenAI(temperature=0)
     tools = [PDLHandlerTool()]
 
     agent = initialize_agent(

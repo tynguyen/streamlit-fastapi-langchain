@@ -105,12 +105,7 @@ def execPDLQuery(**kwargs):
     # TODO: handle different searches to make sure thare are always responses
     query = PDLHandler.buildQuery(must_clauses, should_clauses)
     print(f"QUERY: {query}")
-    import pdb
-
-    pdb.set_trace()
     success, response = PDLHandler.sendQuery(query, 1)
-
-    pdb.set_trace()
     return PDLHandler.convertResponseToStringOfProfiles(response)
 
 
