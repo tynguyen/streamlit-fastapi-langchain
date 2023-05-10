@@ -71,7 +71,11 @@ def submitHandler(session_state, question):
         session_state["messages"].append(
             {"role": "assistant", "content": finalResponseText}
         )
+        # TODO remove:
+        response_chunks = finalResponseText.split("!!!!!!!!")
         session_state["generated"].append(finalResponseText)
+        # for chunk in response_chunks:
+        #     session_state["generated"].append(chunk)
 
 
 def handleQuestion(question: str):
@@ -79,14 +83,68 @@ def handleQuestion(question: str):
     header = {"Content-Type": "application/json"}
     payload = json.dumps({"question": question})
     response = requests.request("POST", host, headers=header, data=payload)
-
     answer = response.json()["result"]
     # # The following is for writing without a container
     # if answer:
     #     ansi_convertor = Ansi2HTMLConverter(inline=True)
     #     answer = ansi_convertor.convert(answer).replace("\n", "<br>")
     #     st.write(answer, unsafe_allow_html=True)
-    return answer
+
+    # Format the  Json answer
+    # import pdb
+
+    # pdb.set_trace()
+    try:
+        json.loads(answer)
+        return convertJsonResponseToPlainText(answer)
+    except:
+        return answer
+
+
+def convertJsonResponseToPlainText(response):
+    response = json.loads(response)
+    newLine = "\n"
+    try:
+        total = response["total"]
+        if total == 0:
+            responseText = f"Oops! We found {total} candidates that match your search. However, talents are still there. Would you mind rewrite the description with some relaxation?"
+            return responseText
+        responseText = f"Great! We found totally {total} candidates that match your search. Among these, the top two are: "
+        # TODO: hardcode for now
+        for record in response["data"]:
+            full_name = record["full_name"].title()
+            skills = record["skills"]
+            experience = record["experience"]
+            try:
+                experience = experience.title()
+            except:
+                experience = [x.title() for x in experience]
+            mobile_phone = record["mobile_phone"]
+            location_country = record["location_country"]
+            try:
+                location_country = location_country.title()
+            except:
+                location_country = [x.title() for x in location_country]
+            personal_emails = record["personal_emails"]
+            linkedin_url = record["linkedin_url"]
+            # responseText += "!!!!!!!!"  # magic substring to divide the long message into chunks (for display)
+            responseText += (
+                newLine
+                + "-----------------------------------------------------------------------"
+                + newLine
+            )
+            responseText += f"- {full_name}"
+            responseText += newLine + f" Contact: {mobile_phone}"
+            responseText += newLine + f" Email: {personal_emails}"
+            responseText += newLine + f" LinkedIn: {linkedin_url}"
+            responseText += newLine + newLine + f" Skills: {skills}"
+            responseText += newLine + newLine + f" Experience: {experience}"
+            responseText += newLine + newLine + f" Location: {location_country}"
+
+        return responseText
+
+    except:
+        return json.dumps(response)
 
 
 if __name__ == "__main__":

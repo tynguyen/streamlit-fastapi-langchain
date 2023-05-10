@@ -167,7 +167,8 @@ class PDLHandler:
         # Get past companies
         experience_companies = []
         for exp in profile["experience"]:
-            company = exp["company"]["name"]
+            if exp is None:
+                company = exp["company"]["name"]
             experience_companies.append(company)
         print_field_names.append("experience")
         print_field_values.append(experience_companies)

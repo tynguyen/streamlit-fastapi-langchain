@@ -4,6 +4,7 @@ from langchain.tools import tool, BaseTool, StructuredTool
 from backend.custom_tools.queryPDL import PDLHandler
 from typing import Optional, Type, Any, List
 from pydantic import BaseModel as PydanticBaseModel, Field
+import json
 from langchain.callbacks.manager import (
     AsyncCallbackManagerForToolRun,
     CallbackManagerForToolRun,
@@ -97,6 +98,8 @@ def execPDLQuery(**kwargs):
     print(f"========================\n Keys and values input to the TOOL:")
     for key, str_of_values in kwargs.items():
         print(f"{key}: {str_of_values}")
+        if key == "size":
+            continue
         if str_of_values is not None and len(str_of_values) > 0:
             values = parseStringToList(str_of_values)
             clauses = [{"match": {key: val}} for val in values]
@@ -105,8 +108,16 @@ def execPDLQuery(**kwargs):
     # TODO: handle different searches to make sure thare are always responses
     query = PDLHandler.buildQuery(must_clauses, should_clauses)
     print(f"QUERY: {query}")
-    success, response = PDLHandler.sendQuery(query, 1)
-    return PDLHandler.convertResponseToStringOfProfiles(response)
+    if "size" in kwargs:
+        size = int(kwargs["size"])
+    else:
+        size = 1
+    success, response = PDLHandler.sendQuery(query, size)
+    if success:
+        return PDLHandler.convertResponseToStringOfProfiles(response)
+    else:
+        none_data = {"total": 0, "data": []}
+        return json.dumps(none_data)
 
 
 class PDLHandlerTool(BaseTool):
@@ -134,6 +145,7 @@ class PDLHandlerTool(BaseTool):
             "skills": skills,
             "location_country": location_country,
             "experience.company.name": companies,
+            "size": "2",
         }
         return execPDLQuery(**kwargs)
 
